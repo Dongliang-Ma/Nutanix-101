@@ -90,7 +90,7 @@ Let's take a look at the storage containers in the demo environment.
 
 #. Click on :fa:`bars` > Virtual Infrastructure > Storage Containers
 
-   On this page, you can see the properties of each of the storage containers across the clusters - the `replication factor <https://nutanixbible.com/#anchor-book-of-acropolis-data-protection>`_`, compression, deduplication, erasure coding, and free space.
+   On this page, you can see the properties of each of the storage containers across the clusters - the `replication factor <https://nutanixbible.com/#anchor-book-of-acropolis-data-protection>`_, compression, deduplication, erasure coding, and free space.
 
    On a new Nutanix cluster, there are normally 3 logical storage containers created by default.
 
@@ -205,7 +205,7 @@ Each node is typically uplinked to a physical switch port trunked/tagged to mult
 
 VM networking is configured through Prism (or optionally CLI/REST), making network management in AHV very simple. In the following exercise you will walk through virtual network creation in AHV.
 
-Additional details about AHV networking can be found `here <https://nutanixbible.com/#anchor-book-of-ahv-networking>`_`.
+Additional details about AHV networking can be found `here <https://nutanixbible.com/#anchor-book-of-ahv-networking>`_.
 
 Create a Network
 .................
