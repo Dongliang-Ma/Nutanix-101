@@ -1,4 +1,4 @@
-.. title:: Nutanix 101 - Infrastructure Deep Dive
+.. title:: My Infrastructure Deep Dive
 
 .. toctree::
   :maxdepth: 2
@@ -14,9 +14,9 @@
   :name: _appendix
   :hidden:
 
----------------------------------------
-Nutanix 101 - Infrastructure Deep Dive
----------------------------------------
+---------------------------
+My Infrastructure Deep Dive
+---------------------------
 
 *The estimated time to complete this lab is 60 minutes.*
 
