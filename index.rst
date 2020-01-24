@@ -23,7 +23,7 @@ My Infrastructure Deep Dive
 Intro
 +++++
 
-In this lab you will explore Prism Central and Prism Element. You will learn how to perform cluster administration tasks such as creating VMs and configuring networks. You will learn more about Nutanix storage and image management within Nutanix AHV.
+In this lab you will explore Prism Central and Prism Element. You will learn how to perform cluster administration tasks such as creating VMs and configuring networks. You will learn more about Nutanix storage and image management within Nutanix AHV. Finally, you will explore VM data protection, including snapshots and replication options.
 
 Let’s first get some terminology out of the way:
 
@@ -64,7 +64,7 @@ Clusters
 
 Let’s view the clusters managed by this Prism Central. In the demo environment, a single cluster is being managed.
 
-#. On the top left corner, click on :fa:`bars` > Hardware > Clusters.
+#. On the top left corner, click on :fa:`bars` **> Hardware > Clusters.**
 
    The Clusters dashboard allows you to view summary information about registered clusters. The List tab, which appears by default when you first open the page, displays a list of the registered clusters and information about them, including AOS version and hypervisor.
 
@@ -73,7 +73,9 @@ Let’s view the clusters managed by this Prism Central. In the demo environment
 Nutanix Distributed Storage Fabric
 ++++++++++++++++++++++++++++++++++
 
-The Nutanix Distributed Storage Fabric (DSF) appears to the hypervisor like any centralized storage array, but uses the CVMs and local storage in each node to provide shared storage for the cluster - the combination of compute and distributed local storage is what is now commonly referred to as Hyperconverged Infrastructure (HCI).
+The Nutanix Distributed Storage Fabric (DSF) appears to the hypervisor like any centralized storage array, but uses the CVMs and local storage in each node to provide shared storage for the cluster - the combination of compute and distributed local storage is what is now commonly referred to as **Hyperconverged Infrastructure (HCI)**.
+
+  .. figure:: images/dsf_overview.png
 
 As a pioneer in the HCI space, Nutanix DSF is a mature solution capable of delivering the performance and resiliency needed to support many different workloads, including enterprise databases, virtual desktops, ROBO, Big Data, and more.
 
@@ -88,7 +90,7 @@ View Storage Containers
 
 Let's take a look at the storage containers in the demo environment.
 
-#. Click on :fa:`bars` > Virtual Infrastructure > Storage Containers
+#. Click on :fa:`bars` **> Virtual Infrastructure > Storage Containers**
 
    On this page, you can see the properties of each of the storage containers across the clusters - the `replication factor <https://nutanixbible.com/#anchor-book-of-acropolis-data-protection>`_, compression, deduplication, erasure coding, and free space.
 
@@ -106,13 +108,13 @@ Storage Views in Prism Element
 ..............................
 To create a storage container, log in to Prism Element on the desired cluster.
 
-#. Click on :fa:`bars` > Hardware > Clusters
+#. Click on :fa:`bars` **> Hardware > Clusters**
 #. Click on the **Cluster Name** to drill down into the cluster page.
 #. Click on the **Launch Prism Element** button. This will open Prism Element in a new tab. Be sure to leave the existing tab open, for the next exercise.
 
    .. figure:: images/05_pc_launch_pe.png
 
-#. On the Prism Element top menu, click on **Home** to bring down the menu.
+#. On the Prism Element top menu, click on **Home** to bring down the main menu.
 
    .. figure:: images/06_pe_main_menu.png
 
@@ -142,8 +144,9 @@ To create a storage container, log in to Prism Element on the desired cluster.
 
 #. Click on **Advanced Settings**.
 
-   Advanced Settings allow you to set a variety of policies:
-   - **Redundancy Factor** - In production, Nutanix supports a redundancy factor of 2 or 3. In this single node test environment, the redundancy factor is 1.
+   Advanced Settings allow you to set a variety of policies.
+
+   - **Redundancy Factor** - In production, Nutanix supports a redundancy factor (RF) of 2 or 3. In this single node test environment, the redundancy factor is 1.
 
    - **Reserved Capacity** - Entering a value in this field allows the container guaranteed reserved space from the storage pool. Reserving space for a storage container means that space is no longer available to other storage containers even if the reserved space is unused. See the `Capacity Reservation Best Practices <https://portal.nutanix.com/#/page/docs/details?targetId=Web-Console-Guide-Prism-v511:sto-capacity-reservation-best-practices-c.html#concept_p34_5y2_ml>`_ documentation for more information.
 
@@ -158,7 +161,7 @@ To create a storage container, log in to Prism Element on the desired cluster.
    - **Filesystem Whitelists** - A whitelist is a set of addresses that are allowed access to this storage container. Whitelists are used to allow appropriate traffic when unauthorized access from other sources is denied.
 
 #. Click on **Advanced Settings** again, to close the Advanced Settings options.
-#. Click on **Save** to create yuor storage container.
+#. Click on **Save** to create your storage container.
 
 Congratulations! You just created a new storage container with a post-process compression delay of 60 minutes. Before moving on to the next exercise, click back to the browser tab with the Prism Central interface.
 
@@ -174,7 +177,7 @@ Add an Image
 
 In this exercise you will create an image that will later be used by a virtual machine. You will create the image via a URL.
 
-#. Click on :fa:`bars` > Virtual Infrastructure > Images
+#. Click on :fa:`bars` **> Virtual Infrastructure > Images**
 #. Click **Add Image**
 #. Select the **URL** radio button.
 #. In the URL field, enter in the following:
@@ -210,7 +213,7 @@ Additional details about AHV networking can be found `here <https://nutanixbible
 Create a Network
 .................
 
-#. Click on :fa:`bars` > Virtual Infrastructure > VMs
+#. Click on :fa:`bars` **> Virtual Infrastructure > VMs**
 
    The VMs page lists an inventory of all the virtual machines running on Nutanix clusters managed by this Prism Central.
 
@@ -253,7 +256,7 @@ In this exercise you will create a VM and perform some common actions on it.
 Create a VM
 ...........
 
-#. Click on :fa:`bars` > Virtual Infrastructure > VMs
+#. Click on :fa:`bars` **> Virtual Infrastructure > VMs**
 #. Click Create VM.
 #. Enter in the following fields (scroll down to view all fields):
 
@@ -324,6 +327,175 @@ Clone the VM
 
 Congratulations!  You cloned your VM. Both Nutanix snapshots and clones use a `redirect-on-write <https://nutanixbible.com/#anchor-book-of-acropolis-snapshots-and-clones>`_ algorithm to quickly and efficiently create copies of VMs as a metadata operation. You can power on the VMs and start using them right away.
 
+High Availability, Live Migration & Affinity Policies
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. note::
+
+  Your lab environment consists of a single node cluster. The following is informational only.
+
+High availability
+.................
+
+Unlike ESXi, high availability is enabled by default for AHV and will restart VMs in a best-effort manner in the event of a host failure. Additional configuration can set resource reservations to ensure there is capacity during an HA event.
+
+.. note::
+
+   To enable memory reservation, in a cluster of at least 2 nodes, select **Enable HA Reservation** under :fa:`cog` **> Manage VM High Availability**.
+
+   As memory is already limited on the shared cluster resources, please do NOT enable HA memory reservations.
+
+With the **Acropolis Dynamic Scheduler** service, AHV performs intelligent initial placement of VMs and can dynamically migrate VMs to other hosts within the cluster to optimize workload performance. This is done "out of the box" without additional configuration.
+
+A benefit of a Nutanix AHV solution is being able to make VM placement decisions not based solely on CPU/memory congestion avoidance, but also based on storage performance.
+
+See `here <https://nutanixbible.com/#anchor-book-of-acropolis-dynamic-scheduler>`_ for additional details about the **Acropolis Dynamic Scheduler**.
+
+Live Migration
+..............
+
+VM live migration is a critical feature for any virtualized environment, allowing VMs to move seamlessly across hosts within a cluster to enable infrastructure maintenance or performance balancing. In a cluster of at least 2 nodes, you would be able to select the VM from the table and click **Migrate** from the list of action links.
+
+Affinity Policies
+..................
+
+VM-to-Host affinity rules are commonly used to map VMs to certain hosts for performance or licensing reasons. AHV can also create VM-to-VM anti-affinity rules, commonly used for highly available applications where you need to ensure multiple instances of an application do not run on the same node. In a cluster of at least 2 nodes, there would be a **+ Set Affinity** option within the VM options.
+
+Data Protection
++++++++++++++++
+
+Nutanix provides the ability to perform VM/vDisk-level storage snapshots. Protection Domains (PDs) are the construct for grouping VMs and applying snapshot and replication policies.
+
+In this exercise you will use Prism to create and restore from VM snapshots, as well as create a Protection Domain for your VMs.
+
+VM Snapshots
+............
+
+#. In **Virtual Infrastructure > VMs**, check the box next to the VM you created earlier.
+
+#. If the VM is powered on, perform a **Power Off** power action from the **Actions** menu.
+
+   .. note:: Installing Nutanix Guest Tools in the VM would allow the VM to be gracefully shutdown.
+
+#. Select the VM and click **Snapshot** from the **Actions** menu.
+
+   .. figure:: images/snapshot_vm.png
+
+#. Provide a name for your snapshot and click **Take Snapshot**.
+
+#. Click on the VM name to go to the VM Details page, then click on **Recovery Points**.
+
+   .. figure:: images/recovery_points.png
+
+#. You can see the recovery point that you created.
+
+   .. figure:: images/recovery_points2.png
+
+   *Now it's time to break your VM!*
+
+#. Click **Back to VMs** in the top left.
+
+   .. figure:: images/back_to_vms.png
+
+#. Make sure your VM is selected and then click **Actions > Update**.
+
+#. Modify your VM and remove the DISK by clicking the **X** icon for each item.
+
+#. Click **Save**.
+
+#. Attempt to power on the VM (**Actions > Power On**) and launch its console window (**Actions > Launch Console**).
+
+   Note that the VM no longer has any disks from which to boot and that the 2048 game is displayed.
+
+#. Power off the VM by click **Actions > Power Off**.
+
+#. Click on the VM name to go to the VM Details page, then click on **Recovery Points**.
+
+#. Select the recovery point by checking the box, then click **Actions > Clone** to restore to a new VM from the recovery point.
+
+   .. figure:: images/recovery_points3.png
+
+#. Give the new VM a name and click **Clone**.
+
+#. Click **Back to VMs** in the top left.
+
+#. Check the box next to the VM, then click **Actions > Power On** and verify that the VM boots successfully.
+
+As previously mentioned, Nutanix snapshots use a `redirect-on-write <https://nutanixbible.com/#anchor-book-of-acropolis-snapshots-and-clones>`_ approach that does not suffer from the performance degradation of chained snapshots found in other hypervisors.
+
+Protection Domains
+..................
+
+Protection Domains are a Prism Element construct. There are a few ways to get to Prism Element.
+
+#. Click on  :fa:`bars` **> Hardware > Clusters**
+
+#. Select the cluster by checking the box next to it, and then click **Actions > Launch Prism Element**.
+
+   .. figure:: images/launch_pe.png
+
+   .. note :: You can also get to the cluster from the Prism Central dashboard, by clicking on the cluster name in the **Cluster Quick Access** widget, or clicking on the cluster name from the **Hardware > Clusters** view and clicking **Launch Prism Element, as we saw in an earlier exercise.**
+
+#. On the Prism Element top menu, click on **Home** to bring down the main menu.
+
+   .. figure:: images/06_pe_main_menu.png
+
+#. Click on **Data Protection**.
+
+#. Read the **Protection Domain Warning** and click **OK**.
+
+   .. figure:: images/data_protection_01.png
+
+#. Click on **Table** to switch to the Table view, then click **+ Protection Domain > Async DR** to begin creating a PD.
+
+   .. note::
+
+      Synchronous replication (Metro Availability) is currently support on ESXi and will be supported in AHV in a future release.
+
+   .. figure:: images/async_dr.png
+
+#. Provide a name for the PD, and click **Create**.
+
+#. Filter or scroll to select one or more VMs that you want to add to the PD.
+
+#. Click **Protect Selected Entities** and verify the VMs appear under **Protected Entities** on the right hand side.
+
+   .. figure:: images/protect_entities.png
+
+   Consistency groups allow you to group multiple VMs to be snapshot at the same time, e.g. multiple VMs belonging to the same application.
+
+   .. note:: Nutanix snapshots can perform application consistent snapshots for supported operating systems with NGT installed. Each VM using application consistent snapshots will be part of its own consistency group.
+
+#. Click **Next**.
+
+#. Click **New Schedule** to define Recovery Point Objective (RPO) and retention.
+
+#. Configure your desired snapshot frequency (e.g. Repeat every 1 hour)
+
+   .. note::
+
+      AHV supports NearSync snapshots, with RPOs as low as 1 minute.
+
+   .. note::
+
+      Multiple schedules can be applied to the same PD, allowing you to take and retain X number of hourly, daily, monthly snapshots.
+
+#. Configure a retention policy (e.g. Keep the last 5 snapshots)
+
+   .. note::
+
+      For environments with remote cluster(s) configured, setting up replication is as easy as defining how many snapshots to keep at each remote site. For example:
+
+      .. figure:: images/snapshot_02.png
+
+#. Click **Create Schedule**.
+
+#. Click **Close** to exit.
+
+Additional information can be found `here <https://nutanixbible.com/#anchor-book-of-acropolis-backup-and-disaster-recovery>`_ (right-click to open in a new tab).
+
+That's it! You've successfully configured native data protection in Prism.
+
 Takeaways
 +++++++++
 
@@ -333,6 +505,7 @@ Takeaways
 - Storage Containers allow you to define storage policy for VMs, including RF level, compression, deduplication, and erasure coding.
 - AHV provides native distributed virtual switching and IP address management, simplifying virtual network management.
 - AHV VMs can be managed via Prism, CLI, or REST API.
+- VM-level snapshot and replication policies can be managed through Prism for any supported hypervisor.
 - The AHV Image Service allows you to provide a catalog of available images to be used in VM deployments.
 - In a multi-node cluster, AHV provides critical features such as live migration, high availability, and dynamic VM placement out-of-the-box without additional configuration.
 - Check out `The Nutanix Bible <https://nutanixbible.com/>`_ for more information about core Nutanix architecture.
